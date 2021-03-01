@@ -1,0 +1,383 @@
+# Owen jakubek
+# Works Cited
+# https://www.webfx.com/tools/emoji-cheat-sheet
+
+################## imports
+from getkey import getkey, keys
+import emoji
+import os
+
+################## constants
+TITLE = "Getting The Candy"
+DEVELOPER = "Mr Minich/Owen"
+INSTRUCTIONS = "Use the arrow for easy mode or a,w,s, and d keys for hard mode and q to quit \nThe candy gives you 10 free moves        Try to get home from trick-or-treating "
+
+BLACK = "\033[30m"
+RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+BLUE = "\033[34m"
+PURPLE = "\033[35m"
+CYAN = "\033[36m"
+WHITE = "\033[37m"
+
+RED_B = "\033[41m"
+GREEN_B = "\033[42m"
+YELLOW_B = "\033[43m"
+BLUE_B = "\033[44m"
+PURPLE_B = "\033[45m"
+CYAN_B = "\033[46m"
+WHITE_B = "\033[47m"
+BLACK_B = "\033[49m"
+
+WHITE_ON_BLACK = WHITE + BLACK_B
+BLACK_ON_WHITE = BLACK + WHITE_B
+WHITE_ON_BLUE = WHITE + BLUE_B
+RED_ON_BLUE = RED + BLUE_B
+YELLOW_ON_BLACK = YELLOW + BLACK_B
+
+RESET_COLORS = "\033[0m"
+
+################## variables
+#theme = WHITE_ON_BLACK
+theme = YELLOW_ON_BLACK
+
+player = emoji.emojize(":vampire:")
+enemy = emoji.emojize(":man_zombie:")
+enemy2 = emoji.emojize(":woman_zombie:")
+powerup = emoji.emojize(":candy:")
+cheese = emoji.emojize(":house_with_garden:")
+#player = RED + "M" + theme
+#player = CYAN_B + " " + theme
+#player = WHITE_ON_BLUE + "M" + theme
+
+# initial position of player
+playerRow = 7
+playerCol = 7
+playerMove = "d"
+
+
+enemyRow = 11
+enemyCol = 50
+enemyMove = "d"
+
+enemy2Row = 8
+enemy2Col = 25
+enemy2Move = "d"
+
+powerupRow = 11
+powerupCol = 24
+
+cheeseRow = 8
+cheeseCol = 55
+
+powerupcounter = 0
+
+movedetect = False
+
+playerpower = False
+
+playernumber = 1
+playerMoveCounter = 0
+
+boardRow = 6
+boardCol = 1
+################## functions
+def setup():
+  print(theme, end="")
+  # hide cursor (use h instead of l to show cursor)
+  print("\033[?25l", end="")  
+  # clear screen and set cursor to top left corner
+  print("\033[2J", end="")  
+  
+
+def displayTitle():
+  print(TITLE)
+  print("By " + DEVELOPER)
+  print(INSTRUCTIONS)
+  print()
+
+def clear_screen():
+  os.system("clear")
+
+def displayBoard():
+  print("------------------------------------------------------------")
+  print("|         |                     |                          |")
+  print("|         |                     |                          |")
+  print("|         |        |------------|      --------------------|")
+  print("|                  |                                       |")
+  print("|                  |                                       |")
+  print("|                  |                                       |")
+  print("|         -------------------------------------            |")
+  print("|                                                          |")
+  print("|                                                          |")
+  print("------------------------------------------------------------")
+  #print("-----------------\n|             
+
+
+################## main program
+
+setup()
+displayTitle()
+
+displayBoard()
+
+# display player in original position
+print("\033[" + str(playerRow) + ";" + str(playerCol) + "H", end="")
+print(player)
+
+print("\033[" + str(enemyRow) + ";" + str(enemyCol) + "H", end="")
+print(enemy)
+
+print("\033[" + str(enemy2Row) + ";" + str(enemy2Col) + "H", end="")
+print(enemy2)
+
+print("\033[" + str(powerupRow) + ";" + str(powerupCol) + "H", end="")
+print(powerup)
+
+print("\033[" + str(cheeseRow) + ";" + str(cheeseCol) + "H", end="")
+print(cheese)
+
+# loop until player quits or hits a boundary
+while playerMove != "q":
+  playerMove = getkey()
+
+  # clear player
+  print("\033[" + str(playerRow) + ";" + str(playerCol) + "H", end="")
+  print(" ", end = "")
+
+  print("\033[" + str(enemyRow) + ";" + str(enemyCol) + "H", end="")
+  print(" ", end = "")
+
+  print("\033[" + str(enemy2Row) + ";" + str(enemy2Col) + "H", end="")
+  print(" ", end = "")
+
+  if playerMove == "q":
+    break
+  elif playerMove == "a":
+    playerCol -= 1
+    playerMoveCounter += 1
+    movedetect = True
+    if enemyCol > playerCol and (playerMoveCounter % 2 == 0):
+      enemyCol -= 1
+    elif enemyCol < playerCol and (playerMoveCounter % 2 == 0):
+      enemyCol += 1
+    if enemy2Row > playerRow and (playerMoveCounter % 2 == 0):
+      enemy2Row -= 1
+    elif enemy2Row < playerRow and (playerMoveCounter % 2 == 0):
+      enemy2Row += 1
+  elif playerMove == keys.LEFT:
+    playerCol -= 1
+    playerMoveCounter += 1
+    movedetect = True
+    if enemyCol > playerCol and (playerMoveCounter % 3 == 0):
+      enemyCol -= 1
+    elif enemyCol < playerCol and (playerMoveCounter % 3 == 0):
+      enemyCol += 1
+    if enemy2Row > playerRow and (playerMoveCounter % 3 == 0):
+      enemy2Row -= 1
+    elif enemy2Row < playerRow and (playerMoveCounter % 3 == 0):
+      enemy2Row += 1
+  elif playerMove == "d":
+    playerCol += 1
+    playerMoveCounter += 1
+    movedetect = True
+    if enemyCol > playerCol and (playerMoveCounter % 2 == 0):
+      enemyCol -= 1
+    elif enemyCol < playerCol and (playerMoveCounter % 2 == 0):
+      enemyCol += 1
+    if enemy2Row > playerRow and (playerMoveCounter % 2 == 0):
+      enemy2Row -= 1
+    elif enemy2Row < playerRow and (playerMoveCounter % 2 == 0):
+      enemy2Row += 1
+  elif playerMove == keys.RIGHT:
+    playerCol += 1
+    playerMoveCounter += 1
+    movedetect = True
+    if enemyCol > playerCol and (playerMoveCounter % 3 == 0):
+      enemyCol -= 1
+    elif enemyCol < playerCol and (playerMoveCounter % 3 == 0):
+      enemyCol += 1
+    if enemy2Row > playerRow and (playerMoveCounter % 3 == 0):
+      enemy2Row -= 1
+    elif enemy2Row < playerRow and (playerMoveCounter % 3 == 0):
+      enemy2Row += 1
+  elif playerMove == "s":
+    playerRow += 1  
+    playerMoveCounter += 1
+    movedetect = True
+    if enemyRow > playerRow and (playerMoveCounter % 2 == 0):
+      enemyRow -= 1
+    elif enemyRow < playerRow and (playerMoveCounter % 2 == 0):
+      enemyRow += 1
+    if enemy2Col > playerCol and (playerMoveCounter % 2 == 0):
+      enemy2Col -= 1
+    elif enemy2Col < playerCol and (playerMoveCounter % 2 == 0):
+      enemy2Col += 1
+  elif playerMove == keys.DOWN:
+    playerRow += 1  
+    playerMoveCounter += 1
+    movedetect = True
+    if enemyRow > playerRow and (playerMoveCounter % 3 == 0):
+      enemyRow -= 1
+    elif enemyRow < playerRow and (playerMoveCounter % 3 == 0):
+      enemyRow += 1
+    if enemy2Col > playerCol and (playerMoveCounter % 3 == 0):
+      enemy2Col -= 1
+    elif enemy2Col < playerCol and (playerMoveCounter % 3 == 0):
+      enemy2Col += 1
+  elif playerMove == "w":
+    playerRow -= 1
+    playerMoveCounter += 1
+    movedetect = True
+    if enemyRow > playerRow and (playerMoveCounter % 2 == 0):
+      enemyRow -= 1
+    elif enemyRow < playerRow and (playerMoveCounter % 2 == 0):
+      enemyRow += 1
+    if enemy2Col > playerCol and (playerMoveCounter % 2 == 0):
+      enemy2Col -= 1
+    elif enemy2Col < playerCol and (playerMoveCounter % 2 == 0):
+      enemy2Col += 1
+  elif playerMove == keys.UP:
+    playerRow -= 1
+    playerMoveCounter += 1
+    movedetect = True
+    if enemyRow > playerRow and (playerMoveCounter % 3 == 0):
+      enemyRow -= 1
+    elif enemyRow < playerRow and (playerMoveCounter % 3 == 0):
+      enemyRow += 1
+    if enemy2Col > playerCol and (playerMoveCounter % 3 == 0):
+      enemy2Col -= 1
+    elif enemy2Col < playerCol and (playerMoveCounter % 3 == 0):
+      enemy2Col += 1
+  elif playerMove == "p":
+    print (playerRow, playerCol)
+  elif playerMove == "o":
+    print (playerMoveCounter)
+  elif playerMove == "f":
+    player = emoji.emojize(":T-Rex:")
+    playernumber = 2
+  elif playerMove == "m":
+    player = emoji.emojize(":mouse:")
+    playernumber = 1
+  else: 
+    print("invalid input")
+
+  if enemyCol == playerCol and enemyRow == playerRow and playernumber == 1:
+    break
+
+  if enemy2Col == playerCol and enemy2Row == playerRow and playernumber == 1:
+    break
+
+  if movedetect == True:
+    print("\033[" + str(boardRow) + ";" + str(boardCol) + "H", end="")
+    displayBoard()
+    print("\033[" + str(cheeseRow) + ";" + str(cheeseCol) + "H", end="")
+    print(cheese)
+    if playerpower == False:
+      print("\033[" + str(powerupRow) + ";" + str(powerupCol) + "H", end="")
+      print(powerup)   
+
+  if playerCol == powerupCol and playerRow == powerupRow:
+    player = emoji.emojize(":dragon:")
+    playernumber = 2
+    playerpower = True
+    
+  if playernumber == 2 and movedetect == True: 
+    powerupcounter += 1
+    movedetect = False 
+
+  if powerupcounter == 11:
+    player = emoji.emojize(":mouse:")
+    playernumber = 1
+
+  # display player in new position
+  print("\033[" + str(playerRow) + ";" + str(playerCol) + "H", end="")
+  print(player)
+
+  print("\033[" + str(enemyRow) + ";" + str(enemyCol) + "H", end="")
+  print(enemy)
+
+  print("\033[" + str(enemy2Row) + ";" + str(enemy2Col) + "H", end="")
+  print(enemy2)
+
+  #printing playerMoveCounter
+  msgRow = 18
+  msgCol = 1
+
+  print("\033[" + str(msgRow) + ";" + str(msgCol) + "H", end="")
+  print ("you have moved this many times:") 
+  print (playerMoveCounter)
+
+  if playerCol == cheeseCol and playerRow == cheeseRow:
+    clear_screen()
+    break
+  
+  #creating the boundries
+  if playerCol < 2 or playerCol > 58  or playerRow < 7 or playerRow > 15 :
+    break
+
+  # vertical lines
+  if playerCol < 12 and playerCol > 9 and playerRow > 6 and playerRow < 10  :
+    break
+
+  if playerCol < 21 and playerCol > 18 and playerRow < 13 and playerRow > 9 :
+    break
+
+  if playerCol < 34 and playerCol > 31 and playerRow < 10 and playerRow > 6 :
+    break
+
+  # horizontal lines
+  if playerCol < 34 and playerCol > 18 and playerRow < 10 and playerRow > 8 :
+    break
+
+  if playerCol < 58 and playerCol > 38 and playerRow < 10 and playerRow > 8 :
+    break
+
+  if playerCol < 48 and playerCol > 9 and playerRow < 14 and playerRow > 12 :
+    break
+# position the red command line prompt far down the screen
+# gives out put if you hit a wall
+if playerCol < 2 or playerCol > 58  or playerRow < 7 or playerRow > 15 :
+  clear_screen()
+  print ("you hit a wall")
+
+  # vertical lines
+if playerCol < 12 and playerCol > 9 and playerRow > 6 and playerRow < 10  :
+  clear_screen()
+  print ("you hit a wall")
+
+if playerCol < 21 and playerCol > 18 and playerRow < 13 and playerRow > 9 :
+  clear_screen()
+  print ("you hit a wall")
+
+if playerCol < 34 and playerCol > 31 and playerRow < 10 and playerRow > 6 :
+  clear_screen()
+  print ("you hit a wall")
+
+  # horizontal lines
+if playerCol < 34 and playerCol > 18 and playerRow < 10 and playerRow > 8 :
+  clear_screen()
+  print ("you hit a wall")
+
+if playerCol < 58 and playerCol > 38 and playerRow < 10 and playerRow > 8 :
+  clear_screen()
+  print ("you hit a wall")
+
+if playerCol < 48 and playerCol > 9 and playerRow < 14 and playerRow > 12 :
+  clear_screen()
+  print ("you hit a wall")
+
+if playerCol == enemyCol and playerRow == enemyRow:
+  clear_screen()
+  print ("you were eaten by the zombie")
+
+if playerCol == enemy2Col and playerRow == enemy2Row:
+  clear_screen()
+  print ("you were eaten by the zombie")
+
+if playerCol == cheeseCol and playerRow == cheeseRow:
+  print ("winner")
+
+#print("\033[" + str(msgRow) + ";" + str(msgCol) + "H", end="")
+#print("You hit a wall                   \n     ")
